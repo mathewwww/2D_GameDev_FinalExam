@@ -19,6 +19,10 @@ public class PlayerFood : MonoBehaviour
 
     void Update()
     {
+        if (Health == 0f)
+        {
+            // Time.timeScale = 0;
+        }
     }
 
     public void SetHealth(float healthChange)
@@ -42,7 +46,7 @@ public class PlayerFood : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Rock"))
         {
-            SetHealth(-20f);
+            SetHealth(-10f);
         }
 
         if (collision.gameObject.CompareTag("Food"))

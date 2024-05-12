@@ -19,7 +19,10 @@ public class PlayerRaft : MonoBehaviour
 
     void Update()
     {
-
+        if (RaftHealth == 0f)
+        {
+            // Time.timeScale = 0;
+        }
     }
 
     public void SetRaftHealth(float rafthealthChange)
@@ -43,7 +46,7 @@ public class PlayerRaft : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Rock"))
         {
-            SetRaftHealth(-20f);
+            SetRaftHealth(-10f);
         }
 
         if (collision.gameObject.CompareTag("Scrap"))
