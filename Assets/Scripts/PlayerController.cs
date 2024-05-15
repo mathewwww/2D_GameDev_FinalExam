@@ -1,34 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-   [SerializeField] Rigidbody2D rg;
-    public float speed = 20f;
+    public float horizontalSpeed = 5f;
+    public float smoothTime = 0.1f; 
+    public float[] lanePositions;
 
-    private Rigidbody2D rb;
+    private int currentLane = 3; 
+    private Vector3 targetPosition; 
+    private Vector3 velocity = Vector3.zero; 
+
+    void Start()
+    {
+     
+        currentLane = Mathf.Clamp(currentLane, 0, lanePositions.Length - 1);
+
+        targetPosition = new Vector3(transform.position.x, lanePositions[currentLane], transform.position.z);
+    }
 
     void Update()
     {
-        MoveGameObject();
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            if (currentLane < lanePositions.Length - 1)
+            {
+                currentLane++;
+                UpdateTargetPosition();
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            if (currentLane > 0)
+            {
+                currentLane--;
+                UpdateTargetPosition();     
+            }
+        }
+
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * moveHorizontal * horizontalSpeed * Time.deltaTime);
+
+        Vector3 currentPosition = transform.position;
+        currentPosition.y = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime).y;
+        transform.position = currentPosition;
     }
 
-    private void MoveGameObject()
+    void UpdateTargetPosition()
     {
-        var horizontalInput = Input.GetAxis("Horizontal");
-        var verticalInput = Input.GetAxis("Vertical");
-
-        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        {
-            rg.transform.Translate(Vector2.right * horizontalInput * Time.deltaTime * speed);
-        }
-
-        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
-        {
-             rg.transform.Translate(Vector2.up * verticalInput * Time.deltaTime * speed);
-        }
+        targetPosition = new Vector3(transform.position.x, lanePositions[currentLane], transform.position.z);
     }
-
-
 }
