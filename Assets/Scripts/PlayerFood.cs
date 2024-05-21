@@ -4,24 +4,34 @@ using UnityEngine;
 
 public class PlayerFood : MonoBehaviour
 {
-    public float Health = 100f; 
+    public float Health = 100f;
     public float MaxHealth = 100f;
-    public float decreaseRate = 1f; 
+    public float decreaseRate = 5f;
 
     [SerializeField]
     private FoodBarUI healthBar;
 
+    public GameObject gameOverCanvas; 
+
     void Start()
     {
+        gameOverCanvas.SetActive(false);
         healthBar.SetMaxHealth(MaxHealth);
         StartCoroutine(DecreaseHealthOverTime());
     }
 
     void Update()
     {
-        if (Health == 0f)
+
+        if (Health <= 0f)
         {
-            // Time.timeScale = 0;
+
+            if (gameOverCanvas != null)
+            {
+                gameOverCanvas.SetActive(true);
+            }
+
+            Time.timeScale = 0;
         }
     }
 
@@ -37,7 +47,7 @@ public class PlayerFood : MonoBehaviour
     {
         while (Health > 0)
         {
-            yield return new WaitForSeconds(1f); 
+            yield return new WaitForSeconds(1f);
             SetHealth(-decreaseRate);
         }
     }
@@ -51,7 +61,7 @@ public class PlayerFood : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Food"))
         {
-            SetHealth(10f);
+            SetHealth(15f);
         }
     }
 }
